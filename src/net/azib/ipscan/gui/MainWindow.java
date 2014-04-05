@@ -38,7 +38,7 @@ import org.eclipse.swt.widgets.*;
  */
 public class MainWindow {
 		
-	private final Shell shell;
+	private static Shell shell;
 	private final GUIConfig guiConfig;
 	
 	private Composite feederArea;
@@ -130,7 +130,7 @@ public class MainWindow {
 	/**
 	 * @return the underlying shell, used by the Main class
 	 */
-	public Shell getShell() {
+	public static Shell getShell() {
 		return shell;
 	}
 
