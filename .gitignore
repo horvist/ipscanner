@@ -4,3 +4,7 @@ ant-bin.linux64
 ant-bin.mac
 ant-bin.win32
 dist
+
+.externalToolBuilders
+.idea
+.project
