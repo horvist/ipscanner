@@ -1,0 +1,8 @@
+Changes in 3.2.2:
+- MAC vendors updated
+- Update site URLs
+- Debian/Ubuntu: allow more different JREs
+- Mac: Specify Java 1.6+ in plist
+- Upgrade JNA to 4.0
+- Windows: remove license step from the installer
+- Minor bugfixes
