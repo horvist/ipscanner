@@ -278,7 +278,6 @@
 					<include name="Link*"/>
 					<include name="Tracker*"/>
 					<include name="Date*"/>
-					<include name="Tray*"/>
 					<include name="Tree*"/>
 					<include name="DateTime*"/>
 					<include name="Sash*"/>

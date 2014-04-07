@@ -21,6 +21,8 @@ import net.azib.ipscan.gui.util.LayoutHelper;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
+import org.eclipse.swt.events.ShellEvent;
+import org.eclipse.swt.events.ShellListener;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.FormAttachment;
@@ -55,8 +57,8 @@ public class MainWindow {
 	/**
 	 * Creates and initializes the main window.
 	 */
-	public MainWindow(Shell shell, GUIConfig guiConfig, Composite feederArea, Composite controlsArea, Combo feederSelectionCombo, Button startStopButton, StartStopScanningAction startStopScanningAction, ResultTable resultTable, StatusBar statusBar, CommandsMenu resultsContextMenu, FeederGUIRegistry feederGUIRegistry, final StateMachine stateMachine, ToolsActions.Preferences preferencesListener, ToolsActions.ChooseFetchers chooseFetchersListsner) {
-		this.shell = shell;
+	public MainWindow(Shell shellParam, GUIConfig guiConfig, Composite feederArea, Composite controlsArea, Combo feederSelectionCombo, Button startStopButton, StartStopScanningAction startStopScanningAction, ResultTable resultTable, StatusBar statusBar, CommandsMenu resultsContextMenu, FeederGUIRegistry feederGUIRegistry, final StateMachine stateMachine, ToolsActions.Preferences preferencesListener, ToolsActions.ChooseFetchers chooseFetchersListsner) {
+		this.shell = shellParam;
 		this.guiConfig = guiConfig;
 		this.statusBar = statusBar;
 		
@@ -74,6 +76,8 @@ public class MainWindow {
 		if (guiConfig.isMainWindowMaximized) {
 			shell.setMaximized(true);
 		}
+		
+		registerTrayIfAvailable();
 
 		if (guiConfig.isFirstRun) {
 			Display.getCurrent().asyncExec(new Runnable() {
@@ -99,6 +103,65 @@ public class MainWindow {
 				stateMachine.init();
 			}
 		});
+	}
+	
+	private boolean registerTrayIfAvailable() {
+		Display display = Display.getDefault();
+		Image image = new Image(display,Labels.getInstance().getImageAsStream("icon"));
+	    final Tray tray = display.getSystemTray();
+	    if (tray != null) {
+	    	final TrayItem item = new TrayItem(tray, SWT.NONE);
+
+	    	shell.addShellListener(new ShellListener() {
+	            public void shellIconified(ShellEvent e) {
+	            }
+	            public void shellDeiconified(ShellEvent e) {
+	            }
+	            public void shellDeactivated(ShellEvent e) {
+	            }
+	            public void shellClosed(ShellEvent e) {
+
+	                shell.setVisible(false);
+	                e.doit = false;
+	            }
+	            public void shellActivated(ShellEvent e) {
+	            }
+	        });
+
+	    	item.setToolTipText("Angry IP Scanner");
+
+	        item.addListener(SWT.Selection, new Listener() {
+	          public void handleEvent(Event event) {
+	            shell.setVisible(true);
+	          }
+	        });
+	        item.addListener(SWT.DefaultSelection, new Listener() {
+	          public void handleEvent(Event event) {
+	            System.out.println("default selection");
+	          }
+	        });
+
+	        final Menu menu = new Menu(shell, SWT.POP_UP);
+
+	        MenuItem mi = new MenuItem(menu, SWT.PUSH);
+	        mi.setText("Exit");
+	        mi.addListener(SWT.Selection, new Listener() {
+	        	public void handleEvent(Event event) {
+	                System.exit(0);
+	            }
+	        });
+	        menu.setDefaultItem(mi);
+
+	        item.addListener(SWT.MenuDetect, new Listener() {
+	          public void handleEvent(Event event) {
+	            menu.setVisible(true);
+	          }
+	        });
+
+	        item.setImage(image);
+	    }
+
+	    return tray != null;
 	}
 	
 	private int showMessage(String text, int buttons) {
