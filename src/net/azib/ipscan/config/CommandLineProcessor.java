@@ -35,6 +35,7 @@ public class CommandLineProcessor implements CommandProcessor, StateTransitionLi
 	String[] feederArgs;
 	Exporter exporter;
 	String outputFilename;
+	String csvSeparator = "elvalaszto";
 	
 	boolean autoStart;
 	boolean autoQuit;
@@ -86,8 +87,12 @@ public class CommandLineProcessor implements CommandProcessor, StateTransitionLi
 				exporter = findExporter(outputFilename);
 				// assume autoStart if exporting was specified
 				autoStart = true;
-			}
-			else
+			} 
+			else //gsanta ez is jo szar megoldas
+			if (arg.startsWith("-csv:")) {
+				Config.getConfig().forScanner().csvSeparator = arg.substring(5);
+			} //gsanta
+			else 
 			if (arg.startsWith("-")) {
 				for (char option : arg.substring(1).toCharArray()) {
 					switch (option) {
@@ -98,7 +103,7 @@ public class CommandLineProcessor implements CommandProcessor, StateTransitionLi
 							throw new IllegalArgumentException("Unknown option: " + option);
 					}
 				}
-			}
+			} 
 			else
 				throw new IllegalArgumentException("Unknown argument: " + arg);
 		}

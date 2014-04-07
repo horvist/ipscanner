@@ -5,6 +5,9 @@ package net.azib.ipscan.exporters;
 
 import java.io.IOException;
 
+import net.azib.ipscan.config.Config;
+import net.azib.ipscan.config.ScannerConfig;
+
 /**
  * CSV Exporter
  *
@@ -13,9 +16,17 @@ import java.io.IOException;
 public class CSVExporter extends AbstractExporter {
 
 	/* CSV delimiter character */
-	static final char DELIMETER = ',';
+	static String DELIMETER = ",";
 	/* Delimiter escaping character (if data contains DELIMETER) */
-	static final char DELIMETER_ESCAPED = '.';
+	static final String DELIMETER_ESCAPED = ".";
+	
+	//gsanta lehet nem a legjobb megoldas
+	private ScannerConfig scannerConfig;
+	
+	public CSVExporter() {
+		scannerConfig = Config.getConfig().forScanner();
+	}
+	//gsanta
 	
 	public String getId() {
 		return "exporter.csv";
@@ -50,6 +61,9 @@ public class CSVExporter extends AbstractExporter {
 	 * @return a safe string to be output in CSV format (it doesn't contain the DELIMETER)
 	 */
 	String csvSafeString(Object o) {
+		//gsanta
+		DELIMETER = scannerConfig.csvSeparator;
+		//gsanta
 		if (o == null)
 			return "";
 		return o.toString().replace(DELIMETER, DELIMETER_ESCAPED);

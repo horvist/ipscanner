@@ -30,6 +30,9 @@ public class ScannerConfig {
 	public boolean useRequestedPorts;
 	public String notAvailableText;
 	public String notScannedText;
+	//gsanta
+	public String csvSeparator;
+	//gsanta
 
 	/**
 	 * Package local constructor.
@@ -53,6 +56,9 @@ public class ScannerConfig {
 		useRequestedPorts = preferences.getBoolean("useRequestedPorts", true);
 		notAvailableText = preferences.get("notAvailableText", Labels.getLabel("fetcher.value.notAvailable"));
 		notScannedText = preferences.get("notScannedText", Labels.getLabel("fetcher.value.notScanned"));
+		//gsanta
+		csvSeparator = preferences.get("csvSeparator", ",");
+		//gsanta
 	}
 		
 	/**
@@ -73,5 +79,8 @@ public class ScannerConfig {
 		preferences.putBoolean("useRequestedPorts", useRequestedPorts);
 		preferences.put("notAvailableText", notAvailableText);
 		preferences.put("notScannedText", notScannedText);
+		//gsanta
+		preferences.put("csvSeparator", csvSeparator);
+		//gsanta
 	}
 }
