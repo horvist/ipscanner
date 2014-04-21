@@ -68,6 +68,8 @@ public class MainMenu implements Startable {
 		Menu subMenu = initMenu(menu, "menu.scan");
 //		initMenuItem(subMenu, "menu.scan.newWindow", "Ctrl+N", new Integer(SWT.MOD1 | 'N'), initListener(FileActions.NewWindow.class));
 //		initMenuItem(subMenu, null, null, null, null);
+		initMenuItem(subMenu, "menu.scan.save", "", SWT.MOD1 | 'S', initListener(ScanMenuActions.SaveToFile.class), false);
+		initMenuItem(subMenu, "menu.scan.load", "", SWT.MOD1 | 'S', initListener(ScanMenuActions.LoadFromFile.class), false);
 		initMenuItem(subMenu, "menu.scan.exportAll", "Ctrl+S", SWT.MOD1 | 'S', initListener(ScanMenuActions.SaveAll.class), false);
 		initMenuItem(subMenu, "menu.scan.exportSelection", null, null, initListener(ScanMenuActions.SaveSelection.class), false);
 //		initMenuItem(subMenu, null, null, null, null);
@@ -130,9 +132,13 @@ public class MainMenu implements Startable {
 		initMenuItem(menu, "menu.commands.details", null, null, initListener(CommandsMenuActions.Details.class));
 		initMenuItem(menu, null, null, null, null);
 		initMenuItem(menu, "menu.commands.rescan", "Ctrl+R", SWT.MOD1 | 'R', initListener(CommandsMenuActions.Rescan.class), true);
-		initMenuItem(menu, "menu.commands.delete", Platform.MAC_OS ? "⌦" : "Del", /* this is not a global key binding */ null, initListener(CommandsMenuActions.Delete.class), true);
+		initMenuItem(menu, "menu.commands.delete", Platform.MAC_OS ? "Delete"
+				: "Del", /* this is not a global key binding */null,
+				initListener(CommandsMenuActions.Delete.class), true);
 		initMenuItem(menu, null, null, null, null);
-		initMenuItem(menu, "menu.commands.copy", Platform.MAC_OS ? "⌘C" : "Ctrl+C", /* this is not a global key binding */ null, initListener(CommandsMenuActions.CopyIP.class));
+		initMenuItem(menu, "menu.commands.copy", Platform.MAC_OS ? "Copy"
+				: "Ctrl+C", /* this is not a global key binding */null,
+				initListener(CommandsMenuActions.CopyIP.class));
 		initMenuItem(menu, "menu.commands.copyDetails", null, null, initListener(CommandsMenuActions.CopyIPDetails.class));
 		initMenuItem(menu, null, null, null, null);		
 		createOpenersMenu(menu);

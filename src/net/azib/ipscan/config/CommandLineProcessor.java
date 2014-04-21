@@ -18,6 +18,7 @@ import net.azib.ipscan.exporters.Exporter;
 import net.azib.ipscan.exporters.ExporterRegistry;
 import net.azib.ipscan.feeders.FeederCreator;
 import net.azib.ipscan.feeders.FeederRegistry;
+import net.azib.ipscan.gui.actions.ScanMenuActions;
 
 /**
  * CommandLineProcessor
@@ -156,8 +157,11 @@ public class CommandLineProcessor implements CommandProcessor, StateTransitionLi
 				feederRegistry.select(feederCreator.getFeederId());
 			
 			// start scanning automatically
-			if (autoStart)
-				stateMachine.transitionToNext();				
+			if (autoStart) {
+				ScanMenuActions.isLoadedFromFile = false;
+				stateMachine.transitionToNext();
+			}
+
 		}
 		else
 		if (transition == Transition.COMPLETE && state == ScanningState.IDLE && exporter != null) {

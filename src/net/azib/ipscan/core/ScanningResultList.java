@@ -253,6 +253,9 @@ public class ScanningResultList implements Iterable<ScanningResult> {
 	}
 	
 	private void updateStatistics(ScanningResult result) {
+		if (info == null) {
+			return;
+		}
 		if (result.getType() == ResultType.ALIVE) {
 			info.numAlive++;
 		}

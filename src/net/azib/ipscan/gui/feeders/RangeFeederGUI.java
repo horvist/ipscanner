@@ -13,6 +13,7 @@ import net.azib.ipscan.feeders.RangeFeeder;
 import net.azib.ipscan.gui.actions.FeederActions;
 import net.azib.ipscan.gui.util.LayoutHelper;
 import net.azib.ipscan.util.InetAddressUtils;
+
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.*;
 import org.eclipse.swt.graphics.Image;
@@ -30,10 +31,10 @@ import java.net.UnknownHostException;
 public class RangeFeederGUI extends AbstractFeederGUI {
 	
 	private Label ipRangeLabel;
-	private Text startIPText;
+	private static Text startIPText;
 	
 	private Label toLabel;
-	private Text endIPText;
+	private static Text endIPText;
 	private boolean isEndIPUnedited = true;
 	private boolean modifyListenersDisabled = false;
 		
@@ -215,6 +216,22 @@ public class RangeFeederGUI extends AbstractFeederGUI {
 				netmaskCombo.forceFocus();
 			}
 		}
+	}
+	
+	public static String getStartIPText() {
+		return startIPText.getText();
+	}
+
+	public static void setStartIPText(String startIP) {
+		RangeFeederGUI.startIPText.setText(startIP);
+	}
+
+	public static String getEndIPText() {
+		return endIPText.getText();
+	}
+
+	public static void setEndIPText(String endIP) {
+		RangeFeederGUI.endIPText.setText(endIP);
 	}
 
 } 
