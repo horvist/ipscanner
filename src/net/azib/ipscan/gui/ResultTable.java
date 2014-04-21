@@ -5,6 +5,7 @@
  */
 package net.azib.ipscan.gui;
 
+import net.azib.ipscan.config.CommandLineProcessor;
 import net.azib.ipscan.config.GUIConfig;
 import net.azib.ipscan.config.Labels;
 import net.azib.ipscan.core.ScanningResult;
@@ -14,6 +15,10 @@ import net.azib.ipscan.core.state.ScanningState;
 import net.azib.ipscan.core.state.StateMachine;
 import net.azib.ipscan.core.state.StateMachine.Transition;
 import net.azib.ipscan.core.state.StateTransitionListener;
+import net.azib.ipscan.exporters.ExportProcessor;
+import net.azib.ipscan.exporters.ExportProcessor.ScanningResultFilter;
+import net.azib.ipscan.exporters.Exporter;
+import net.azib.ipscan.exporters.ExporterRegistry;
 import net.azib.ipscan.fetchers.CommentFetcher;
 import net.azib.ipscan.fetchers.Fetcher;
 import net.azib.ipscan.fetchers.FetcherRegistry;
@@ -21,10 +26,12 @@ import net.azib.ipscan.fetchers.FetcherRegistryUpdateListener;
 import net.azib.ipscan.gui.actions.ColumnsActions;
 import net.azib.ipscan.gui.actions.CommandsMenuActions;
 import net.azib.ipscan.gui.actions.ToolsActions;
+
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.*;
 
+import java.io.File;
 import java.util.List;
 
 /**
@@ -129,17 +136,28 @@ public class ResultTable extends Table implements FetcherRegistryUpdateListener,
 				if (isDisposed())
 					return;
 				
+				final int index;
 				if (scanningResults.isRegistered(result)) {
 					// just redraw the item
-					int index = scanningResults.update(result);
+					index = scanningResults.update(result);
 					clear(index);
 				}
 				else {
 					// first register, then add - otherwise first redraw may fail (the table is virtual)
-					int index = getItemCount();
+					index = getItemCount();
 					scanningResults.registerAtIndex(index, result);
 					// setItemCount(index+1) - this seems to rebuild TableItems inside, so is slower
 					new TableItem(ResultTable.this, SWT.NONE);
+				}
+				
+				if(CommandLineProcessor.writeResultToFileImmediately == true) {
+					ScanningResultFilter filter = new ScanningResultFilter() {
+						public boolean apply(int ind, ScanningResult result) {
+							return index == ind && result.isReady();
+						}
+					};
+
+					CommandLineProcessor.exportProcessor.process(getScanningResults(), filter);
 				}
 			}
 		});

@@ -30,6 +30,9 @@ public class ScannerConfig {
 	public boolean useRequestedPorts;
 	public String notAvailableText;
 	public String notScannedText;
+	
+	public boolean writeResultToFileImmediately;
+	public String outputFileName = "result.csv";
 
 	/**
 	 * Package local constructor.

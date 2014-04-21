@@ -40,6 +40,10 @@ public class CommandLineProcessor implements CommandProcessor, StateTransitionLi
 	boolean autoQuit;
 	boolean appendToFile;
 	
+	public static boolean writeResultToFileImmediately = false;
+	public static Exporter exporterForImmediateFileWriting;
+	public static ExportProcessor exportProcessor;
+	
 	CommandLineProcessor(FeederRegistry<FeederCreator> feederCreators, ExporterRegistry exporters) {
 		this.feederRegistry = feederCreators;
 		this.exporters = exporters;		
@@ -88,6 +92,10 @@ public class CommandLineProcessor implements CommandProcessor, StateTransitionLi
 				autoStart = true;
 			}
 			else
+			if (arg.equals("-write")) {
+				writeResultToFileImmediately = true;
+			}
+			else
 			if (arg.startsWith("-")) {
 				for (char option : arg.substring(1).toCharArray()) {
 					switch (option) {
@@ -105,6 +113,13 @@ public class CommandLineProcessor implements CommandProcessor, StateTransitionLi
 		if (feederCreator == null)
 			throw new IllegalArgumentException("Feeder missing");
 		feederCreator.unserialize(feederArgs);
+		
+		if(writeResultToFileImmediately == true) {
+			File file = new File(outputFilename);
+			file.delete();
+			exporterForImmediateFileWriting = exporters.createExporter(outputFilename);
+			exportProcessor  = new ExportProcessor(exporter, new File(outputFilename), true);
+		}
 	}
 
 	@Override
@@ -129,6 +144,7 @@ public class CommandLineProcessor implements CommandProcessor, StateTransitionLi
 		usage.append("-s\tstart scanning automatically\n");
 		usage.append("-q\tquit after exporting the results\n");
 		usage.append("-a\tappend to the file, do not overwrite\n");
+		usage.append("-write\twrite during scan\n");
 		return usage.toString();
 	}
 
@@ -162,8 +178,10 @@ public class CommandLineProcessor implements CommandProcessor, StateTransitionLi
 		else
 		if (transition == Transition.COMPLETE && state == ScanningState.IDLE && exporter != null) {
 			// TODO: introduce SAVING state in order to show nice notification in the status bar
-			ExportProcessor processor = new ExportProcessor(exporter, new File(outputFilename), appendToFile);
-			processor.process(scanningResults, null);
+			if(!writeResultToFileImmediately) {
+				ExportProcessor processor = new ExportProcessor(exporter, new File(outputFilename), appendToFile);
+				processor.process(scanningResults, null);
+			}
 			if (autoQuit) {
 				System.err.println("Saved results to " + outputFilename);
 				System.exit(0);

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="ext/rocksaw/src/java"/>
+	<classpathentry kind="src" path="ext/win-installer/Installer"/>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="src" path="test"/>
+	<classpathentry kind="lib" path="ext/launch4j/launch4j.jar"/>
+	<classpathentry kind="lib" path="ext/launch4j/xstream.jar"/>
+	<classpathentry kind="lib" path="ext/proguard/proguard.jar"/>
+	<classpathentry kind="lib" path="lib/jna-win32.jar"/>
+	<classpathentry kind="lib" path="lib/jna-win64.jar"/>
+	<classpathentry kind="lib" path="lib/jna.jar"/>
+	<classpathentry kind="lib" path="lib/picocontainer-1.0.jar"/>
+	<classpathentry kind="lib" path="lib/swt-linux.jar"/>
+	<classpathentry kind="lib" path="lib/swt-linux64.jar"/>
+	<classpathentry kind="lib" path="lib/swt-mac.jar"/>
+	<classpathentry kind="lib" path="lib/swt-win32.jar"/>
+	<classpathentry kind="lib" path="lib/swt-win64.jar"/>
+	<classpathentry kind="lib" path="lib/testing/asm-3.0.jar"/>
+	<classpathentry kind="lib" path="lib/testing/asm-tree-3.0.jar"/>
+	<classpathentry kind="lib" path="lib/testing/cobertura.jar"/>
+	<classpathentry kind="lib" path="lib/testing/jakarta-oro-2.0.8.jar"/>
+	<classpathentry kind="lib" path="lib/testing/junit.jar"/>
+	<classpathentry kind="lib" path="lib/testing/log4j-1.2.9.jar"/>
+	<classpathentry kind="lib" path="lib/testing/mockito-all.jar"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>
