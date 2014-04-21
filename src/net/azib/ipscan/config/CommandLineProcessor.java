@@ -35,7 +35,6 @@ public class CommandLineProcessor implements CommandProcessor, StateTransitionLi
 	String[] feederArgs;
 	Exporter exporter;
 	String outputFilename;
-	String csvSeparator = "elvalaszto";
 	
 	boolean autoStart;
 	boolean autoQuit;
@@ -134,6 +133,7 @@ public class CommandLineProcessor implements CommandProcessor, StateTransitionLi
 		usage.append("-s\tstart scanning automatically\n");
 		usage.append("-q\tquit after exporting the results\n");
 		usage.append("-a\tappend to the file, do not overwrite\n");
+		usage.append("-csv:<separator>\tchange the csv separator\n");
 		return usage.toString();
 	}
 
