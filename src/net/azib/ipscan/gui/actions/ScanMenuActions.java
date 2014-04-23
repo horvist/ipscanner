@@ -185,93 +185,6 @@ public class ScanMenuActions {
 		}
 	}
 
-	static abstract class Save implements Listener {
-		private final ExporterRegistry exporterRegistry;
-		private final ResultTable resultTable;
-		private final StatusBar statusBar;
-		private final boolean isSelection;
-		private final StateMachine stateMachine;
-
-		Save(ExporterRegistry exporterRegistry, ResultTable resultTable, StatusBar statusBar, StateMachine stateMachine, boolean isSelection) {
-			this.exporterRegistry = exporterRegistry;
-			this.resultTable = resultTable;
-			this.statusBar = statusBar;
-			this.stateMachine = stateMachine;
-			this.isSelection = isSelection;
-		}
-
-		public void handleEvent(Event event) {
-			if (resultTable.getItemCount() <= 0) {
-				throw new UserErrorException("commands.noResults");
-			}
-
-			if (!stateMachine.inState(ScanningState.IDLE)) {
-				// ask the user whether to save incomplete results
-				MessageBox box = new MessageBox(resultTable.getShell(), SWT.YES | SWT.NO | SWT.ICON_WARNING);
-				box.setText(Version.NAME);
-				box.setMessage(Labels.getLabel("exception.ExporterException.scanningInProgress"));
-				if (box.open() != SWT.YES)
-					return;
-			}
-
-			// create the file dialog
-			FileDialog fileDialog = new FileDialog(resultTable.getShell(), SWT.SAVE);
-
-			// gather lists of extensions and exporter names
-			List<String> extensions2 = new ArrayList<String>();
-			List<String> descriptions = new ArrayList<String>();
-			StringBuffer labelBuffer = new StringBuffer(Labels.getLabel("title.save"));
-			addFileExtensions(extensions2, descriptions, labelBuffer);
-
-			List<String> extensions = new ArrayList<String>();
-			extensions.add(extensions2.get(0));
-
-			// initialize other stuff
-			fileDialog.setText(labelBuffer.toString());
-			fileDialog.setFilterExtensions(extensions.toArray(new String[extensions.size()]));
-			fileDialog.setFilterNames(descriptions.toArray(new String[descriptions.size()]));
-
-			// show the dialog and receive the filename
-			String fileName = fileDialog.open();
-
-			// check the received file name
-			if (fileName != null) {
-				Exporter exporter = exporterRegistry.createExporter(fileName);
-
-				statusBar.setStatusText(Labels.getLabel("state.exporting"));
-
-				// TODO: expose appending feature in the GUI
-				ExportProcessor exportProcessor = new ExportProcessor(exporter, new File(fileName), false);
-
-				// in case of isSelection we need to create our filter
-				ScanningResultFilter filter = null;
-				if (isSelection) {
-					filter = new ScanningResultFilter() {
-						public boolean apply(int index, ScanningResult result) {
-							return resultTable.isSelected(index);
-						}
-					};
-				}
-
-				exportProcessor.process(resultTable.getScanningResults(), filter);
-
-				statusBar.setStatusText(null);
-			}
-		}
-
-		private void addFileExtensions(List<String> extensions, List<String> descriptions, StringBuffer sb) {
-			sb.append(" (");
-			for (Exporter exporter : exporterRegistry) {
-				extensions.add("*." + exporter.getFilenameExtension());
-				sb.append(exporter.getFilenameExtension()).append(", ");
-				descriptions.add(Labels.getLabel(exporter.getId()));
-			}
-			// strip the last comma
-			sb.delete(sb.length() - 2, sb.length());
-			sb.append(")");
-		}
-	}
-
 	static abstract class SaveResults implements Listener {
 		private final ExporterRegistry exporterRegistry;
 		private final ResultTable resultTable;
@@ -359,12 +272,6 @@ public class ScanMenuActions {
 	public static final class LoadFromFile extends Load {
 		public LoadFromFile(ExporterRegistry exporterRegistry, ResultTable resultTable, StatusBar statusBar, StateMachine stateMachine, MainWindow mainWindow) {
 			super(exporterRegistry, resultTable, statusBar, stateMachine, false, mainWindow);
-		}
-	}
-
-	public static final class SaveToFile extends Save {
-		public SaveToFile(ExporterRegistry exporterRegistry, ResultTable resultTable, StatusBar statusBar, StateMachine stateMachine) {
-			super(exporterRegistry, resultTable, statusBar, stateMachine, false);
 		}
 	}
 
